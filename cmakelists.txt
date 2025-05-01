@@ -9,8 +9,58 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_library(oxygen STATIC ${SOURCES})
 
-target_include_directories(oxygen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(oxygen
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
 
 target_compile_features(oxygen PUBLIC
     cxx_std_17
+)
+
+set_target_properties(oxygen PROPERTIES
+    EXPORT_NAME oxygen
+)
+
+install(TARGETS oxygen
+    EXPORT oxygenTargets
+    ARCHIVE DESTINATION lib           # .a or .lib
+    LIBRARY DESTINATION lib           # .so or .dll
+    RUNTIME DESTINATION bin           # Windows DLL
+    INCLUDES DESTINATION include
+)
+
+install(EXPORT oxygenTargets
+    FILE oxygenTargets.cmake
+    NAMESPACE oxygen::              # allows target oxygen::oxygen
+    DESTINATION lib/cmake/oxygen
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION include
+)
+
+include(CMakePackageConfigHelpers)
+
+# 1) Generate the version file (you already have this)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/oxygenConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+# 2) Generate the actual oxygenConfig.cmake from the .in template
+#    Make sure you've renamed cmake/oxygenConfig.cmake -> cmake/oxygenConfig.cmake.in
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/oxygenConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/oxygenConfig.cmake"
+  INSTALL_DESTINATION lib/cmake/oxygen
+)
+
+# 3) Install the generated config + version files
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/oxygenConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/oxygenConfigVersion.cmake"
+  DESTINATION lib/cmake/oxygen
 )
