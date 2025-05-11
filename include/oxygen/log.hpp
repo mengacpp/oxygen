@@ -10,7 +10,7 @@
 #define TIT_ANSI_ERROR      "\033[1;91m"
 #define TIT_ANSI_FATAL   "\033[1;95m"
 
-namespace titanium
+namespace oxygen
 {
     class Message 
     {
@@ -98,4 +98,4 @@ namespace titanium
 
 }
 
-std::ostream& operator<<(std::ostream& os, const titanium::Message& msg);
+std::ostream& operator<<(std::ostream& os, const oxygen::Message& msg);

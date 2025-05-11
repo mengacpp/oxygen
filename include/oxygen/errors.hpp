@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace titanium
+namespace oxygen
 {
     class RecoverableException : public std::runtime_error
     {

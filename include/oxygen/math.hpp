@@ -1,6 +1,6 @@
 #pragma once
 
-namespace oxy { namespace math {
+namespace oxygen { namespace math {
 
 int max(int a, int b);
 
