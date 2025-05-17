@@ -3,12 +3,12 @@
 #include <iostream>
 #include <string>
 
-#define TIT_ANSI_RESET      "\033[0m"
-#define TIT_ANSI_DEBUG      "\033[1;90m"
-#define TIT_ANSI_INFO       "\033[1;94m"
-#define TIT_ANSI_WARNING    "\033[1;93m"
-#define TIT_ANSI_ERROR      "\033[1;91m"
-#define TIT_ANSI_FATAL   "\033[1;95m"
+#define OXY_ANSI_RESET      "\033[0m"
+#define OXY_ANSI_DEBUG      "\033[1;90m"
+#define OXY_ANSI_INFO       "\033[1;94m"
+#define OXY_ANSI_WARNING    "\033[1;93m"
+#define OXY_ANSI_ERROR      "\033[1;91m"
+#define OXY_ANSI_FATAL      "\033[1;95m"
 
 namespace oxygen
 {
@@ -52,7 +52,7 @@ namespace oxygen
     public:
         inline std::string get_output() const override
         {
-            return (enabled()) ? (get_text() + TIT_ANSI_RESET "\n") : ""; 
+            return (enabled()) ? (get_text() + OXY_ANSI_RESET "\n") : ""; 
         }
     };
 
@@ -61,9 +61,9 @@ namespace oxygen
     {
     protected:
         std::string get_prefix() const override 
-        {return TIT_ANSI_DEBUG;}
+        {return OXY_ANSI_DEBUG;}
 
-        #ifndef TIT_DEBUG
+        #ifndef OXY_DEBUG
         bool enabled() const override {return false; }
         #endif
     };
@@ -72,28 +72,28 @@ namespace oxygen
     {
     protected:
         std::string get_prefix() const override 
-        {return TIT_ANSI_INFO "[    INFO     ]: " TIT_ANSI_RESET;}
+        {return OXY_ANSI_INFO "[    INFO     ]: " OXY_ANSI_RESET;}
     };
 
     class LogWarning : public Log
     {
     protected:
         std::string get_prefix() const override 
-        {return TIT_ANSI_WARNING "[   WARNING   ]: " TIT_ANSI_RESET;}
+        {return OXY_ANSI_WARNING "[   WARNING   ]: " OXY_ANSI_RESET;}
     };
 
     class LogError : public Log
     {
     protected:
         std::string get_prefix() const override 
-        {return TIT_ANSI_ERROR "[    ERROR    ]: " TIT_ANSI_RESET;}
+        {return OXY_ANSI_ERROR "[    ERROR    ]: " OXY_ANSI_RESET;}
     };
 
     class LogFatal : public Log
     {
     protected:
         std::string get_prefix() const override 
-        {return TIT_ANSI_FATAL "[ FATAL ERROR ]: " TIT_ANSI_RESET;}
+        {return OXY_ANSI_FATAL "[ FATAL ERROR ]: " OXY_ANSI_RESET;}
     };
 
 }
