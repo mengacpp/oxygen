@@ -71,4 +71,39 @@ namespace xgn {
     std::optional<T> m_result;
   };
 
+  template <typename U> class OutcomeOr<std::unique_ptr<U>> {
+  public:
+    OutcomeOr(std::unique_ptr<U> result) : 
+      m_outcome(OutcomeCode::Ok, "Dereference this to access value"), 
+      m_result(std::move(result)) {}
+    OutcomeOr(Outcome outcome) : 
+      m_outcome(outcome), 
+      m_result(nullptr) {}
+
+    inline bool is_ok() const {return m_outcome.is_ok(); }
+    inline Outcome outcome() const {return m_outcome; }
+
+    U* operator->() {
+    return m_result.get();
+    }
+    const U* operator->() const {
+        return m_result.get();
+    }
+
+    U& operator*() & {
+        return *m_result;
+    }
+
+    const U& operator*() const & {
+        return *m_result;
+    }
+    
+    std::unique_ptr<U> operator*() && {
+        return std::move(m_result);
+    }
+
+  private:
+    Outcome m_outcome;
+    std::unique_ptr<U> m_result;
+  };
 } // namespace oxygen
