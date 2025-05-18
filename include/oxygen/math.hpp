@@ -1,7 +1,9 @@
 #pragma once
 
-namespace oxygen { namespace math {
+namespace xgn {
+namespace math {
 
 int max(int a, int b);
 
-}}
+  } // namespace math
+} // namespace xgn
