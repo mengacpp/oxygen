@@ -1,9 +1,11 @@
 #pragma once
 
-namespace xgn {
-namespace math {
+namespace xgn
+{
+namespace math
+{
 
 int max(int a, int b);
 
-  } // namespace math
+} // namespace math
 } // namespace xgn
