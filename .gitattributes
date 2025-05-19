@@ -1,0 +1,8 @@
+# Ensure all text files use LF in the repository and appropriate endings in working directories
+* text=auto
+
+# Specific file types
+*.cpp text eol=lf
+*.hpp text eol=lf
+*.c text eol=lf
+*.h text eol=lf
