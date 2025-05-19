@@ -1,7 +1,10 @@
 #include "oxygen/outcome.hpp"
 
-xgn::Outcome xgn::outcome_ok() {
-  return Outcome(
-    OutcomeCode::Ok, 
-    "Operation completed succesfully");
+void xgn::Outcome::update(xgn::Outcome out)
+{
+    if (out.is_ok() || !is_ok())
+        return;
+
+    m_code = out.code();
+    m_message = out.message();
 }

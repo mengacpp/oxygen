@@ -1,14 +1,16 @@
 #pragma once
 
-#include <string>
 #include <optional>
+#include <string>
 
 #include "log.hpp"
 
-namespace xgn {
+namespace xgn
+{
 
-  /// Each code represent a different error
-  enum class OutcomeCode {
+/// Each code represent a different error
+enum class OutcomeCode
+{
     Ok,
     InvalidParams,
     PermissionDenied,
@@ -16,94 +18,110 @@ namespace xgn {
     IoError,
     Unknown,
     NotFound,
-  };
+};
 
-  class Outcome {
-  public:
-
+class Outcome
+{
+public:
     // constructors
 
-    Outcome(OutcomeCode code, std::string message) : 
-      m_code(code),
-      m_message(message) {}
-    Outcome(const Outcome &outcome) {
-      m_code = outcome.m_code;
-      m_message = outcome.m_message;
+    Outcome(OutcomeCode code, std::string message)
+        : m_code(code), m_message(message)
+    {
+    }
+    Outcome(const Outcome &outcome)
+    {
+        m_code = outcome.m_code;
+        m_message = outcome.m_message;
     }
     ~Outcome() = default;
 
+    // TODO fix this description
+    // change the error of this instance only if this is currently `ok` and it
+    // gets an error as a parameter
+    // keeps the first error it gets
+    void update(Outcome out);
+
     // error checks
 
-    inline bool is_ok() const 
-      {return m_code == OutcomeCode::Ok ? true : false; }
-    inline OutcomeCode code() const {return m_code; };
+    inline bool is_ok() const
+    {
+        return m_code == OutcomeCode::Ok ? true : false;
+    }
+    inline OutcomeCode code() const { return m_code; };
 
     // message logging
 
-    inline std::string message() const {return m_message; }
-    inline std::string error_message() const {return log::Error() << m_message; }
-    inline std::string fatal_message() const {return log::Fatal() << m_message; }
-    inline std::string warning_message() const {return log::Warning() << m_message; }
+    inline std::string message() const { return m_message; }
+    inline std::string error_message() const
+    {
+        return log::Error() << m_message;
+    }
+    inline std::string fatal_message() const
+    {
+        return log::Fatal() << m_message;
+    }
+    inline std::string warning_message() const
+    {
+        return log::Warning() << m_message;
+    }
 
-  protected:
+protected:
     OutcomeCode m_code;
     std::string m_message;
-  };
 
-  Outcome outcome_ok();
+public:
+    inline static Outcome ok()
+    {
+        return Outcome(OutcomeCode::Ok, "Operation completed succesfully");
+    }
+};
 
-  template <typename T> class OutcomeOr {
-  public:
-    OutcomeOr(T result) : 
-      m_outcome(OutcomeCode::Ok, "Dereference this to access value"), m_result(result) {}
+template <typename T> class OutcomeOr
+{
+public:
+    OutcomeOr(T result)
+        : m_outcome(OutcomeCode::Ok, "Dereference this to access value"),
+          m_result(result)
+    {
+    }
     OutcomeOr(Outcome outcome) : m_outcome(outcome) {}
 
-    inline bool is_ok() const {return m_outcome.is_ok(); }
-    inline Outcome outcome() const {return m_outcome; }
-    T& operator*() {
-      return m_result.value();
-    }
-    const T& operator*() const {
-      return m_result.value();
-    }
-  private:
+    inline bool is_ok() const { return m_outcome.is_ok(); }
+    inline Outcome outcome() const { return m_outcome; }
+    T &operator*() { return m_result.value(); }
+    const T &operator*() const { return m_result.value(); }
+
+private:
     Outcome m_outcome;
     std::optional<T> m_result;
-  };
+};
 
-  template <typename U> class OutcomeOr<std::unique_ptr<U>> {
-  public:
-    OutcomeOr(std::unique_ptr<U> result) : 
-      m_outcome(OutcomeCode::Ok, "Dereference this to access value"), 
-      m_result(std::move(result)) {}
-    OutcomeOr(Outcome outcome) : 
-      m_outcome(outcome), 
-      m_result(nullptr) {}
-
-    inline bool is_ok() const {return m_outcome.is_ok(); }
-    inline Outcome outcome() const {return m_outcome; }
-
-    U* operator->() {
-    return m_result.get();
+template <typename U> class OutcomeOr<std::unique_ptr<U>>
+{
+public:
+    OutcomeOr(std::unique_ptr<U> result)
+        : m_outcome(OutcomeCode::Ok, "Dereference this to access value"),
+          m_result(std::move(result))
+    {
     }
-    const U* operator->() const {
-        return m_result.get();
-    }
+    OutcomeOr(Outcome outcome) : m_outcome(outcome), m_result(nullptr) {}
 
-    U& operator*() & {
-        return *m_result;
-    }
+    inline bool is_ok() const { return m_outcome.is_ok(); }
+    inline Outcome outcome() const { return m_outcome; }
 
-    const U& operator*() const & {
-        return *m_result;
-    }
-    
-    std::unique_ptr<U> operator*() && {
-        return std::move(m_result);
-    }
+    U *operator->() { return m_result.get(); }
 
-  private:
+    const U *operator->() const { return m_result.get(); }
+
+    U &operator*() & { return *m_result; }
+
+    const U &operator*() const & { return *m_result; }
+
+    std::unique_ptr<U> operator*() && { return std::move(m_result); }
+
+private:
     Outcome m_outcome;
     std::unique_ptr<U> m_result;
-  };
+};
 } // namespace oxygen
