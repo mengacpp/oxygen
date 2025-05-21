@@ -1,7 +1,10 @@
 #pragma once
 
 #include <iostream>
+#include <ostream>
+#include <sstream>
 #include <string>
+#include <type_traits>
 
 #define XGN_ANSI_RESET "\033[0m"
 #define XGN_ANSI_DEBUG "\033[1;90m"
@@ -24,6 +27,19 @@ public:
     }
 
     virtual bool enabled() const { return true; }
+
+    template <typename T>
+    std::enable_if_t<std::is_same<decltype(std::declval<std::ostream &>()
+                                           << std::declval<T>()),
+                                  std::ostream &>::value,
+                     Message &>
+    operator<<(T const &v)
+    {
+        std::ostringstream oss;
+        oss << v;
+        m_text += oss.str();
+        return *this;
+    }
 
 protected:
     virtual std::string get_prefix() const { return ""; };
