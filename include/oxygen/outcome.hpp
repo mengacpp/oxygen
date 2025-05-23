@@ -13,7 +13,7 @@ namespace xgn
 enum class OutcomeCode
 {
     Ok,
-    InvalidParams,
+    InvalidParameter,
     PermissionDenied,
     MallocFailed,
     IoError,
@@ -25,6 +25,11 @@ class Outcome
 {
 public:
     // constructors
+
+    Outcome(std::string message)
+        : m_code(OutcomeCode::Unknown), m_message(message)
+    {
+    }
 
     Outcome(OutcomeCode code, std::string message)
         : m_code(code), m_message(message)
