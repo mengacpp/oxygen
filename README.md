@@ -2,16 +2,28 @@
 
 Oxygen is a versatile C++ utilities library designed to simplify common programming tasks.
 
-## Install oxygen
+## Prerequisites
 
-### On Unix-like OS
+Before installing Oxygen, make sure these tools are installed and avaliable on your device:
 
-1. **clone the repo on your device**
-2. **Navigate to the directory where you cloned the repo**
-3. **install using CMake**
-   - run these commands in your terminal
+- git
+- CMake
+- phyton3
 
-    ```bash
-    cmake -B build
-    sudo cmake --build build --target install
-    ```
+## Installation
+
+To install Oxygen, run one of the commands specified down here, they will clone this repo and run a script that will install Oxygen in your system path:
+
+- **On Unix-like OS**
+  
+  ```bash
+  git clone https://github.com/mengacpp/oxygen.git && sudo python3 oxygen/install.py
+  ```
+
+- **On Windows**
+  
+  ```powershell
+  git clone https://github.com/mengacpp/oxygen.git; python oxygen/install.py
+  ```
+
+  Before running this, make sure you started *PowerShell* as administrator, or it won't work.

@@ -4,7 +4,7 @@
 ### Custom ###
 
 build/
-test/
+.ignore/
 test.sh
 test.bat
 .cache/
